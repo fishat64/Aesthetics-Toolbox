@@ -10,15 +10,37 @@ from tqdm import tqdm
 from AT import balance_qips, CNN_qips, color_and_simple_qips, edge_entropy_qips, fourier_qips, fractal_dimension_qips, PHOG_qips
 
 
+from pathlib import Path
+
+# Basisverzeichnisse sauber definieren
+THIS_FILE = Path(__file__).resolve()
+AESTHETICS_ROOT = THIS_FILE.parent           # .../Masterarbeit/aesthetics_toolbox
+PROJECT_ROOT = AESTHETICS_ROOT.parent        # .../Masterarbeit
+
+# Deine Pfade:
+IMG_ROOT = PROJECT_ROOT / "Datenerhebung" / "IMG"
+RESULTS_DIR = PROJECT_ROOT / "Datenerhebung" / "data"
+
+RESULTS_DIR.mkdir(exist_ok=True)
+
+print("AESTHETICS_ROOT:", AESTHETICS_ROOT)
+print("IMG_ROOT:", IMG_ROOT)
+print("RESULTS_DIR:", RESULTS_DIR)
+
 ########################################## set image paths and results.csv ##########################
 
 ### set path to save the results csv files
-results_path = '/home/ralf/Documents/18_SIP_Machine/Full_Datasets_SIPs/Full_dataset_stats_new/'
+results_path = str(RESULTS_DIR) + "/"   # oder: results_path = str(RESULTS_DIR)
+results_csv_name = "aesthetics_qips.csv"  # falls es eine results_csv_name-Variable gibt
+
+import os
+
+
 
 
 ### each entry is a pair of the name of the csv file and the path to the image folder, you can enter several datasets/pairs
 datasets = [
-            ['results.csv'  , 'path_to_images'],   
+            ['aesthetics_qips.csv'  , 'Datenerhebung/IMG/1280x720/' ],   
             ]
 
 ####################################### set wanted QIPs to 'True', otherwise "False"  #########################
@@ -108,6 +130,7 @@ def custom_round(num):
 ######################################
 
 for entry in datasets:
+
     csv_name = entry[0]
     image_path = entry[1]
     print('##########################')
@@ -116,17 +139,31 @@ for entry in datasets:
     
     
        
-    
+    weights_path = AESTHETICS_ROOT / "AT" / "bvlc_alexnet_conv1.npy"
+    print("Lade CNN-Gewichte von:", weights_path)
+
+    [kernel, bias] = np.load(
+        open(weights_path, "rb"),
+        encoding="latin1",
+        allow_pickle=True
+    )
     
     ### load values for CNN kernel and bias
-    [kernel,bias] = np.load(open("AT/bvlc_alexnet_conv1.npy", "rb"), encoding="latin1", allow_pickle=True)
+    #[kernel,bias] = np.load(open("AT/bvlc_alexnet_conv1.npy", "rb"), encoding="latin1", allow_pickle=True)
             
     #progress_text = "Operation in progress. Please wait."
 
+    image_extensions = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
+
     file_names = []
-    for root, dirs, files in os.walk(image_path):
-        for file in files:
-            file_names.append( os.path.join(root,file) )
+    for root, dirs, files in os.walk(IMG_ROOT):
+        for fname in files:
+            if Path(fname).suffix.lower() in image_extensions:
+                file_names.append(str(Path(root) / fname))
+
+    print(f"Gefundene Bilder für QIP-Machine: {len(file_names)}")
+    if not file_names:
+        raise RuntimeError(f"Keine Bilder im Ordner {IMG_ROOT} gefunden.")
        
     ## create new CSV file, if it does not already exists
     if not os.path.exists(results_path + csv_name):   
@@ -142,7 +179,7 @@ for entry in datasets:
                         log.write(dict_full_names_QIPs.get(key,key) + ',')     
             log.write('\n')  
             
-        file_names = []
+        #file_names = []
         for root, dirs, files in os.walk(image_path):
             for file in files:
                 file_names.append( os.path.join(root,file) )
@@ -151,16 +188,19 @@ for entry in datasets:
         df = pd.read_csv(results_path + csv_name, sep=',')
         exist_img_list = list(df['img_file'])
         
-        file_names = []
+        #file_names = []
         for root, dirs, files in os.walk(image_path):
             for file in files:
                 if file not in exist_img_list:
                     file_names.append( os.path.join(root,file) )
+    print("Dateien")
+    print(file_names)
+    print(image_path)
             
     for file in tqdm(file_names, total=len(file_names)):
             try:
-                # print(' ')
-                # print('Finished percent: ' , np.round(100* img_counter/num_images),  '   Calculating image:  '  , file_name)
+                #print(' ')
+                #print('Finished percent: ' , np.round(100* img_counter/num_images),  '   Calculating image:  '  , file)
                 file_dir = os.path.join(  image_path , file)
     
                 #replace_commas:
