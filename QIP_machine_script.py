@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 #Import the required Libraries
 import numpy as np
 from  PIL import Image

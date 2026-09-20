@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 #Import the required libraries
 import streamlit as st
 from PIL import Image
@@ -110,7 +111,6 @@ st.write('')
 
 st.markdown('<p class="contr">Contact and GitHub</p>', unsafe_allow_html=True)
 st.markdown('Questions, suggestions, bugs: ralf.bartho@gmail.com', unsafe_allow_html=True)
-st.markdown('GitHub repository: https://github.com/RBartho/Aesthetics-Toolbox', unsafe_allow_html=True)
 st.markdown('GitHub repository: https://github.com/RBartho/Aesthetics-Toolbox', unsafe_allow_html=True)
 
 

@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 import numpy as np
 from skimage.transform import resize
 from skimage.color import rgb2lab

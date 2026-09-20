@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 import numpy as np
 from scipy.ndimage import convolve
 import PIL

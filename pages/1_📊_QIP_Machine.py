@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 #Import the required libraries
 import streamlit as st
 import numpy as np

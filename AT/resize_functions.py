@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 import numpy as np
 import PIL
 import io

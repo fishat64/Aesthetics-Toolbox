@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 import numpy as np
 import PIL
 
@@ -52,7 +53,12 @@ def fractal_dimension_2d(img_gray):
         b = (c > 0) & (c < 4)
         i += 1
 
-    params = np.polyfit(np.log2(x[1:]), np.log2(y[1:]), 1)
+    x_arr = np.array(x[1:], dtype=float)
+    y_arr = np.array(y[1:], dtype=float)
+    valid = y_arr > 0
+    if np.sum(valid) < 2:
+        return np.nan
+    params = np.polyfit(np.log2(x_arr[valid]), np.log2(y_arr[valid]), 1)
     D = params[0]
     return D
 

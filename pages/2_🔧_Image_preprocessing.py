@@ -1,3 +1,4 @@
+# Conda-Umgebung: neuro_imganalysis
 import streamlit as st
 import io
 from PIL import Image
